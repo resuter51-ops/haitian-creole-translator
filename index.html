@@ -168,32 +168,32 @@ async function translateText() {
     else document.getElementById('textStatusMsg').textContent = 'Erè tradiksyon. Eseye ankò.';
   } catch { document.getElementById('textStatusMsg').textContent = 'Erè tradiksyon. Eseye ankò.'; }
 }
-function speak(text, lang) {
-  window.speechSynthesis.cancel();
-  function doSpeak() {
-    const voices = window.speechSynthesis.getVoices();
-    const u = new SpeechSynthesisUtterance(text);
-    u.lang = lang; u.rate = 0.85; u.volume = 1; u.pitch = 1;
-    const match = voices.find(v => v.lang && v.lang.startsWith(lang.split('-')[0]));
-    if (match) u.voice = match;
-    window.speechSynthesis.speak(u);
-  }
-  if (window.speechSynthesis.getVoices().length > 0) {
-    doSpeak();
-  } else {
-    window.speechSynthesis.onvoiceschanged = doSpeak;
-    window.speechSynthesis.getVoices();
-  }
-}
+// speak() replaced by speakNow() using Google TTS
 
 function speakNow(text, lang) {
-  window.speechSynthesis.cancel();
-  const voices = window.speechSynthesis.getVoices();
-  const u = new SpeechSynthesisUtterance(text);
-  u.lang = lang; u.rate = 0.85; u.volume = 1; u.pitch = 1;
-  const match = voices.find(v => v.lang && v.lang.startsWith(lang.split('-')[0]));
-  if (match) u.voice = match;
-  window.speechSynthesis.speak(u);
+  // Use Google Translate TTS for Haitian Creole — device voices are unreliable
+  const ttsLang = (lang.startsWith('ht') || lang.startsWith('hat')) ? 'ht' : 'en';
+  const chunks = [];
+  const maxLen = 200;
+  let remaining = text;
+  while (remaining.length > 0) {
+    let chunk = remaining.substring(0, maxLen);
+    const lastSpace = chunk.lastIndexOf(' ');
+    if (remaining.length > maxLen && lastSpace > 0) chunk = chunk.substring(0, lastSpace);
+    chunks.push(chunk.trim());
+    remaining = remaining.substring(chunk.length).trim();
+  }
+  let i = 0;
+  function playNext() {
+    if (i >= chunks.length) return;
+    const src = `https://translate.googleapis.com/translate_tts?ie=UTF-8&tl=${ttsLang}&client=gtx&q=${encodeURIComponent(chunks[i])}`;
+    const audio = new Audio(src);
+    audio.onended = () => { i++; playNext(); };
+    audio.onerror = () => { i++; playNext(); };
+    audio.play().catch(() => {});
+    i++;
+  }
+  playNext();
 }
 function reSpeak() { if (lastTranslated) speakNow(lastTranslated, lastSpeakLang); }
 function reSpeakText() { if (lastTranslated) speakNow(lastTranslated, lastSpeakLang); }
