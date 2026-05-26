@@ -171,11 +171,11 @@ async function translateText() {
 // speak() replaced by speakNow() using Google TTS
 
 function speakNow(text, lang) {
-  // Use Google Translate TTS for Haitian Creole — device voices are unreliable
-  const ttsLang = (lang.startsWith('ht') || lang.startsWith('hat')) ? 'ht' : 'en';
+  const ttsLang = (lang.startsWith('ht')) ? 'ht' : 'en';
+  const TTS_PROXY = 'https://john-174a7c51.base44.app/functions/tts';
   const chunks = [];
-  const maxLen = 200;
-  let remaining = text;
+  const maxLen = 180;
+  let remaining = text.trim();
   while (remaining.length > 0) {
     let chunk = remaining.substring(0, maxLen);
     const lastSpace = chunk.lastIndexOf(' ');
@@ -186,7 +186,7 @@ function speakNow(text, lang) {
   let i = 0;
   function playNext() {
     if (i >= chunks.length) return;
-    const src = `https://translate.googleapis.com/translate_tts?ie=UTF-8&tl=${ttsLang}&client=gtx&q=${encodeURIComponent(chunks[i])}`;
+    const src = TTS_PROXY + '?lang=' + ttsLang + '&text=' + encodeURIComponent(chunks[i]);
     const audio = new Audio(src);
     audio.onended = () => { i++; playNext(); };
     audio.onerror = () => { i++; playNext(); };
