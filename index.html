@@ -2,6 +2,10 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
+<meta http-equiv="Pragma" content="no-cache"/>
+<meta http-equiv="Expires" content="0"/>
+<!-- v1779796498 -->
 <meta name="google" content="notranslate"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Haitian Creole Translator</title>
@@ -193,6 +197,15 @@ function speakNow(text, lang) {
 }
 function reSpeak() { if (lastTranslated) speakNow(lastTranslated, lastSpeakLang); }
 function reSpeakText() { if (lastTranslated) speakNow(lastTranslated, lastSpeakLang); }
+function resetAll() {
+  finalTranscript = ''; lastTranslated = '';
+  document.getElementById('originalText').textContent = '';
+  document.getElementById('translatedText').textContent = '';
+  hide('originalBox'); hide('translatedBox'); hide('actionBtns'); hide('statusMsg'); hide('recIndicator'); show('hint');
+  if (recognition) { try { recognition.stop(); } catch(e){} }
+  isRecording = false; activeRec = false;
+  updateLabels();
+}
 function resetText() { document.getElementById('textInput').value = ''; document.getElementById('textTranslatedText').textContent = ''; hide('textTranslatedBox'); hide('textActionBtns'); hide('textStatusMsg'); lastTranslated = ''; }
 function showStatus(msg) { const el = document.getElementById('statusMsg'); el.textContent = msg; show('statusMsg'); }
 function show(id) { document.getElementById(id).classList.remove('hidden'); }
