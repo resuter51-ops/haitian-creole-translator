@@ -149,7 +149,7 @@ async function doTranslate(text) {
     lastSpeakLang = isEnHt ? 'fr-FR' : 'en-US';
     const res = await fetch(TRANSLATE_URL, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({text:text.trim(),from,to}) });
     const data = await res.json();
-    if (data.translated) { lastTranslated = data.translated; document.getElementById('translatedText').textContent = data.translated; show('translatedBox'); hide('statusMsg'); show('actionBtns'); speakNow(data.translated, lastSpeakLang); }
+    if (data.translated) { lastTranslated = data.translated; document.getElementById('translatedText').textContent = data.translated; show('translatedBox'); hide('statusMsg'); show('actionBtns'); }
     else showStatus('Erè tradiksyon. Eseye ankò.');
   } catch { showStatus('Erè tradiksyon. Eseye ankò.'); }
 }
@@ -164,7 +164,7 @@ async function translateText() {
   try {
     const res = await fetch(TRANSLATE_URL, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({text,from,to}) });
     const data = await res.json();
-    if (data.translated) { lastTranslated = data.translated; document.getElementById('textTranslatedText').textContent = data.translated; hide('textStatusMsg'); show('textTranslatedBox'); show('textActionBtns'); speakNow(data.translated, lastSpeakLang); }
+    if (data.translated) { lastTranslated = data.translated; document.getElementById('textTranslatedText').textContent = data.translated; hide('textStatusMsg'); show('textTranslatedBox'); show('textActionBtns'); }
     else document.getElementById('textStatusMsg').textContent = 'Erè tradiksyon. Eseye ankò.';
   } catch { document.getElementById('textStatusMsg').textContent = 'Erè tradiksyon. Eseye ankò.'; }
 }
