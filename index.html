@@ -191,6 +191,8 @@ function speakNow(text, lang) {
   if (match) u.voice = match;
   window.speechSynthesis.speak(u);
 }
+function reSpeak() { if (lastTranslated) speakNow(lastTranslated, lastSpeakLang); }
+function reSpeakText() { if (lastTranslated) speakNow(lastTranslated, lastSpeakLang); }
 function resetText() { document.getElementById('textInput').value = ''; document.getElementById('textTranslatedText').textContent = ''; hide('textTranslatedBox'); hide('textActionBtns'); hide('textStatusMsg'); lastTranslated = ''; }
 function showStatus(msg) { const el = document.getElementById('statusMsg'); el.textContent = msg; show('statusMsg'); }
 function show(id) { document.getElementById(id).classList.remove('hidden'); }
